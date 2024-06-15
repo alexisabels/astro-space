@@ -1,0 +1,28 @@
+---
+import YoutubeEmbed from "../../components/YoutubeEmbed.astro";
+import { getLaunchById } from "../../components/services/spacex";
+import Layout from "../../layouts/Layout.astro";
+export const prerender = false;
+const { id } = Astro.params;
+let launch;
+if (id) {
+  launch = await getLaunchById({ id });
+}
+---
+
+<Layout title={`Lanzamiento ${id}`}>
+  <article class="flex gap-y-4 flex-col">
+    <img
+      class="w-52 h-auto"
+      src={launch?.links?.patch.small}
+      alt={launch?.name}
+    />
+    <h2 class="text-4xl text-white font-bold">
+      Flight #{launch?.flight_number}
+    </h2>
+    <p class="text-lg">{launch?.links.flickr.original}</p>
+
+    <p class="text-lg">{launch?.details}</p>
+    <YoutubeEmbed videoCode={launch?.links.youtube_id} />
+  </article>
+</Layout>
